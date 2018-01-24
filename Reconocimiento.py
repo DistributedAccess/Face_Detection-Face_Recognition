@@ -4,9 +4,10 @@ import time
 import cv2
 import os
 
-EigenFace = cv2.face.createEigenFaceRecognizer(num_components=80, threshold=50)
-FisherFace = cv2.face.createFisherFaceRecognizer(num_components=80, threshold=50)
-Face_LBP = cv2.face.createLBPHFaceRecognizer(threshold=50)
+#   OPEN CV 3.3.0
+EigenFace = cv2.face.EigenFaceRecognizer_create(num_components=80, threshold=50)
+FisherFace = cv2.face.FisherFaceRecognizer_create(num_components=80, threshold=50)
+Face_LBP = cv2.face.LBPHFaceRecognizer_create(threshold=50)
 
 def Preparar_Directorios(Directorios, Detect_Op):
 
@@ -87,8 +88,8 @@ def Prediccion(Imagen):
     inicio = time.time()
     #    Creamos una copia de la imagen de Entrada
 
-    #face = Deteccion.Deteccion_Haar(Imagen)
-    face = cv2.imread(Imagen)
+    face = Deteccion.Deteccion_Haar(Imagen)
+    #face = cv2.imread(Imagen)
 
     #    Hacemos una prediccion del rostro usando
     #    el objeto global face_recognizer >:)

@@ -1,11 +1,12 @@
 import cv2
 
+Recorte = None
 
 def Deteccion_Haar(Imagen):
     #   Esta_Funcion detecta los rostros de la Imagen de Entrada y regresa
     #   el array del numero de rostros y la ubicacion de cada uno
 
-    Recorte = None
+    global Recorte
     #   Cargamos la imagen
     Image = cv2.imread(Imagen)
 
@@ -19,7 +20,7 @@ def Deteccion_Haar(Imagen):
     faces = haar_face_cascade.detectMultiScale(Gray, scaleFactor=1.1, minNeighbors=5);
     #return faces
     for (x,y,w,h) in faces:
-        Recorte = Image[y:y+w, x:x+h]
+        Recorte = Gray[y:y+w, x:x+h]
 
     return cv2.resize(Recorte, (200, 200))
 
@@ -27,6 +28,7 @@ def Deteccion_LBP(Imagen):
     #   Esta_Funcion detecta los rostros de la Imagen de Entrada y regresa
     #   el array del numero de rostros y la ubicacion de cada uno
 
+    global Recorte
     #   Cargamos la imagen
     Image = cv2.imread(Imagen)
 
@@ -40,7 +42,7 @@ def Deteccion_LBP(Imagen):
     faces = lbp_face_cascade.detectMultiScale(Gray, scaleFactor=1.1, minNeighbors=5);
     #return faces
     for (x,y,w,h) in faces:
-        Recorte = Image[y:y+w, x:x+h]
+        Recorte = Gray[y:y+w, x:x+h]
 
     return cv2.resize(Recorte, (200, 200))
 
