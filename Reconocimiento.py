@@ -37,13 +37,13 @@ def Preparar_Directorios(Directorios, Detect_Op):
         SubDirectorio = Directorios + "/" + Nombre_Directorio   #   Directorios/U1, Directorios/U2...
 
         Imagenes = os.listdir(SubDirectorio)    #   Lista de las imagenes dentro del Subdirectorio Un...
-        #print SubDirectorio
+        print SubDirectorio
 
         #   Se leera cada imagen en el SubDirectorio
         for Nombre_Imagen in Imagenes:
 
             SubImagen = SubDirectorio + "/" + Nombre_Imagen     #   Directorios/U1/1.jpg, Directorios/U1/2.jpg...
-            #print Nombre_Imagen
+            print Nombre_Imagen
 
             #    Leemos la SubImagen
             #Imagi = cv2.imread(SubImagen,cv2.IMREAD_GRAYSCALE)
