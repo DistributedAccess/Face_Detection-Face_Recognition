@@ -2,6 +2,7 @@ import Reconocimiento
 import numpy as np
 import Deteccion
 import random
+import Menu
 import time
 import cv2
 import os
@@ -84,21 +85,51 @@ def Preparar_Directorios(Directorios, Porcentaje, Detect_Op):
 
     return Entrenamiento, Prediccion
 
-def Predecir_Imagenes(fotos, etiquetas):
+def Predecir_Imagenes(fotos, etiquetas, Clasifcador):
 
+    c = 0
     for i in fotos:
-        a = Reconocimiento.Prediccion(i,etiquetas)
-        print a
+        a = Reconocimiento.Prediccion(i,Clasifcador)
+        print etiquetas[c], a
+        c = c+1
+    x = raw_input("")
 
 if __name__ == "__main__":
 
-    Op =  input("    Escoja una Base de Datos: ")
-    Po =  input("    Escoja una Porcentaje: ")
-    Cl =  input("    Escoja un clasifcador: ")
-    print("     Preparando los directorios...")
-    Entrenamiento, Prediccion = Preparar_Directorios(Op,Po,Cl)
-    print("     Entrenando al sistema...")
-    Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
-    Ops =  input("    Ya? ")
-    print("     Predeciendo Imagenes...")
-    Predecir_Imagenes(Prediccion[0], Ops)
+    E   = True
+
+    Op  = None
+    BD  = None
+    PO  = None
+    CL  = None
+    UM  = None
+    CO  = None
+
+    Entrenamiento = []
+    Prediccion    = []
+
+    while(True):
+
+        Opciones = [BD,PO,CL,UM,CO]
+        Op = Menu.Menu_Principal(Opciones)
+        if(Op == '1'):
+            BD = Menu.Base_Datos()
+        elif(Op == '2'):
+            PO = Menu.Porcentaje()
+        elif(Op == '3'):
+            CL = Menu.Clasifcador()
+        elif(Op == '4'):
+            UM = Menu.Umbral()
+            Reconocimiento.Configurar_Umbrales(UM)
+        elif(Op == '5'):
+            CO = Menu.Componentes()
+            Reconocimiento.Configurar_Componentes(CO)
+        elif(Op == '6'):
+            print('\n\t Preparando Directorios...')
+            Entrenamiento, Prediccion = Preparar_Directorios(BD,PO,CL)
+            print('\n\t Entrenado al Sistema...')
+            Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
+            Predecir_Imagenes(Prediccion[0],Prediccion[1],CL)
+        elif(Op == 'E'):
+            print("\n\t BYE!")
+            break
