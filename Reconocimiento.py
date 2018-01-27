@@ -100,18 +100,18 @@ def Entrenamiento(faces, labels):
     tiempo = fin - inicio
     print 'LBPH train: ', tiempo
 
-def Prediccion(Imagen, Clasifcador):
+def Prediccion(face, Clasifcador):
     #    AQUI SE HACE LA MAGIA, PARA ELLO YA DEBIO DE HABERSE
     #    ENTRENADO AL SISTEMA :3
 
     Pre = []
 
-    if(Clasifcador == 1):
+    """if(Clasifcador == 1):
         face = Deteccion.Deteccion_Haar(Imagen)
         Pre.append('SubClasificador: Haar ')
     else:
         face = Deteccion.Deteccion_LBP(Imagen)
-        Pre.append('SubClasificador: LBP ')
+        Pre.append('SubClasificador: LBP ')"""
     #    Hacemos una prediccion del rostro usando
     #    el objeto global face_recognizer >:)
     inicio = time.time()

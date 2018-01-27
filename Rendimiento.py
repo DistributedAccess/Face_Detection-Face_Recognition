@@ -1,22 +1,36 @@
 import Reconocimiento
+import numpy as np
 import Deteccion
+import random
 import time
 import cv2
 import os
 
-Texto = []
+def Preparar_Directorios(Directorios, Porcentaje, Detect_Op):
+    """   Esta funcion se encarga de leer las imagenes que se encuentran
+        en cada uno de los directorios que pertenezcan al directorio de
+        entrada "Directorio" y retornar dos arrays, cada array contiene
+        imagenes o rostros con sus respectivas clases o etiquetas.
 
-def Escoge_Directorio_Prediccion(Directorios):
+        El argumento Porcentaje debera recibir un numero entre el 1 y el
+        100, que represente el porcentaje de 1-100%  de imagenes a utlizar
+        por SubDirectorio en el entrenamiento, el resto de imagenes se
+        utilizaran en la prediccion.
 
-    #   Esta funcion se encarga de leer cada imagen del directorio
-    #   de entrada y retornar la imagen y su etiqueta, esto con el
-    #   proposito de probar la prediccion del algoritmo de
-    #   reconocimiento
+        Este algoritmo escoje a las imagenes de forma aleatoria. Cada
+        array corresponde al grupo de imagenes y etiquetas que se ocuparan
+        en el entrenamiento y la prediccion.   """
 
     Directorio = os.listdir(Directorios)    #   Lista de los Directorios dentro de Directorios
 
-    fotos   = []  #   En este array se guardaran los rostros de cada usuario
-    etiquetas = []  #   En este array se guardara el numero de directorio
+    Entrenamiento = []  #   Este array se retornara para el Entrenamiento
+    Prediccion    = []  #   Este array se retornara para la Prediccion
+
+    FaceE = []  #   En este array se guardaran los rostros de cada usuario para el entrenamiento
+    LabeE = []  #   En este array se guardara el numero de directorio para el entrenamiento
+
+    FaceP = []  #   En este array se guardaran los rostros de cada usuario para la prediccion
+    LabeP = []  #   En este array se guardara el numero de directorio para la prediccion
 
     #   Se leera cada directorio y las imagenes en cada uno
     for Nombre_Directorio in Directorio:
@@ -26,20 +40,49 @@ def Escoge_Directorio_Prediccion(Directorios):
         if not Nombre_Directorio.startswith("U"):
             continue;
 
+
         etiqueta = int(Nombre_Directorio.replace("U", ""))      #   Se guardara el numero de U, eg U2 -->2
         SubDirectorio = Directorios + "/" + Nombre_Directorio   #   Directorios/U1, Directorios/U2...
 
-        Imagenes = os.listdir(SubDirectorio)    #   Lista de las imagenes dentro del Subdirectorio Un...
+        Imagenes = os.listdir(SubDirectorio)    #   Lista de las imagenes dentro del Subdirectorio U'n'...
 
-        #   Se leera cada imagen en el SubDirectorio
+        #print SubDirectorio
+        I_E = len(Imagenes)
+        I_E = round((I_E)*(Porcentaje/100.0))
+
+        Contador = 0
+
+        #   Se leera cada imagen en el SubDirectorio aleatoriamente
+        random.shuffle(Imagenes)            #   Con esta linea nos aseguramos de tener imagenes aleatoriamente
         for Nombre_Imagen in Imagenes:
 
             SubImagen = SubDirectorio + "/" + Nombre_Imagen     #   Directorios/U1/1.jpg, Directorios/U1/2.jpg...
+            #print Nombre_Imagen
+            Image = SubImagen
 
-            fotos.append(SubImagen)
-            etiquetas.append(etiqueta)
+            #   Detectamos el Rostro segun Detect_Op, puede ser: Haar cascades o LBP.
+            if(Detect_Op == 1):
+                rostro = Deteccion.Deteccion_Haar(Image)    #   Detector Haar Cascade
+            else:
+                rostro = Deteccion.Deteccion_LBP(Image)     #   Detector LBP
 
-    return fotos, etiquetas
+            #   Si se detecto un rostro este se concatenara al array
+            #   faces y se le asigna al array labels correspondiente
+            if rostro is not None:
+
+                if Contador < I_E:
+                    FaceE.append(np.asarray(rostro, dtype=np.uint8))
+                    LabeE.append(etiqueta)
+                    Contador = Contador + 1
+                    #print Contador
+                elif Contador >= I_E:
+                    FaceP.append(np.asarray(rostro, dtype=np.uint8))
+                    LabeP.append(etiqueta)
+
+    Entrenamiento = [FaceE, LabeE]
+    Prediccion = [FaceP, LabeP]
+
+    return Entrenamiento, Prediccion
 
 def Predecir_Imagenes(fotos, etiquetas):
 
@@ -50,12 +93,12 @@ def Predecir_Imagenes(fotos, etiquetas):
 if __name__ == "__main__":
 
     Op =  input("    Escoja una Base de Datos: ")
+    Po =  input("    Escoja una Porcentaje: ")
     Cl =  input("    Escoja un clasifcador: ")
     print("     Preparando los directorios...")
-    face, labe = Reconocimiento.Preparar_Directorios(Op,Cl)
+    Entrenamiento, Prediccion = Preparar_Directorios(Op,Po,Cl)
     print("     Entrenando al sistema...")
-    Reconocimiento.Entrenamiento(face,labe)
-    foto, etiqueta = Escoge_Directorio_Prediccion(Op)
-    SCl =  input("    Escoja un Subclasifcador: ")
+    Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
+    Ops =  input("    Ya? ")
     print("     Predeciendo Imagenes...")
-    Predecir_Imagenes(foto, SCl)
+    Predecir_Imagenes(Prediccion[0], Ops)
