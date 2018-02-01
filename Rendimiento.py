@@ -1,7 +1,11 @@
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+from natsort import natsorted
 import Reconocimiento
 import numpy as np
 import Deteccion
 import random
+import Matrix
 import Menu
 import time
 import cv2
@@ -23,6 +27,8 @@ def Preparar_Directorios(Directorios, Porcentaje, Detect_Op):
         en el entrenamiento y la prediccion.   """
 
     Directorio = os.listdir(Directorios)    #   Lista de los Directorios dentro de Directorios
+
+    Directorio = natsorted(Directorio)      #   Ordenamos los Directorios
 
     Entrenamiento = []  #   Este array se retornara para el Entrenamiento
     Prediccion    = []  #   Este array se retornara para la Prediccion
@@ -85,14 +91,31 @@ def Preparar_Directorios(Directorios, Porcentaje, Detect_Op):
 
     return Entrenamiento, Prediccion
 
-def Predecir_Imagenes(fotos, etiquetas, Clasifcador):
+def Predecir_Imagenes(fotos, etiquetas, algoritmo):
 
+    A = []
     c = 0
     for i in fotos:
-        a = Reconocimiento.Prediccion(i,Clasifcador)
-        print etiquetas[c], a
+        a = Reconocimiento.Prediccion(i,algoritmo)
+        A.append(a[0][0])
+        #print etiquetas[c], A
         c = c+1
     x = raw_input("")
+    print A
+    print etiquetas
+    return etiquetas, A
+
+def Etiquetas(etiquetas):
+
+    A = []
+    B = len(etiquetas)
+    a = etiquetas.count(etiquetas[0])
+    c = a
+
+    while(c <= B):
+        A.append(etiquetas[c-1])
+        c = c + a
+    return A
 
 if __name__ == "__main__":
 
@@ -129,7 +152,17 @@ if __name__ == "__main__":
             Entrenamiento, Prediccion = Preparar_Directorios(BD,PO,CL)
             print('\n\t Entrenado al Sistema...')
             Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
-            Predecir_Imagenes(Prediccion[0],Prediccion[1],CL)
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],1)
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],2)
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],3)
+            cnf_matrix = confusion_matrix(real,pred)
+            f=Etiquetas(real)
+
+            plt.figure()
+            Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
+                                  title='Confusion matrix, without normalization')
+            plt.show()
+
         elif(Op == 'E'):
             print("\n\t BYE!")
             break

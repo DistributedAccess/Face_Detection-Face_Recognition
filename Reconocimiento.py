@@ -31,28 +31,23 @@ def Entrenamiento(faces, labels):
     tiempo = fin - inicio
     print 'LBPH train: ', tiempo
 
-def Prediccion(face, Clasifcador):
+def Prediccion(face,algoritmo):
     #    AQUI SE HACE LA MAGIA, PARA ELLO YA DEBIO DE HABERSE
     #    ENTRENADO AL SISTEMA :3
 
     Pre = []    #   Lista a retornar
 
-    label1 = EigenFace.predict(face)
-    label1 = list(label1)
-    Pre.append('EigenFace: ')
-    Pre.append(label1)
+    if(algoritmo == 1):
+        label1 = EigenFace.predict(face)
+        Pre.append(label1)
 
+    elif(algoritmo == 2):
+        label2 = FisherFace.predict(face)
+        Pre.append(label2)
 
-    label2 = FisherFace.predict(face)
-    label2 = list(label2)
-    Pre.append('FisherFace: ')
-    Pre.append(label2)
-
-
-    label3 = Face_LBP.predict(face)
-    label3 = list(label3)
-    Pre.append('Face_LBP: ')
-    Pre.append(label3)
+    elif(algoritmo == 3):
+        label3 = Face_LBP.predict(face)
+        Pre.append(label3)
 
     return Pre
 
