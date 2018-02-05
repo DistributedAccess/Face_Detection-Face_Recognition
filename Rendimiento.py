@@ -98,11 +98,8 @@ def Predecir_Imagenes(fotos, etiquetas, algoritmo):
     for i in fotos:
         a = Reconocimiento.Prediccion(i,algoritmo)
         A.append(a[0][0])
-        #print etiquetas[c], A
         c = c+1
-    x = raw_input("")
-    print A
-    print etiquetas
+        print a
     return etiquetas, A
 
 def Etiquetas(etiquetas):
@@ -153,14 +150,24 @@ if __name__ == "__main__":
             print('\n\t Entrenado al Sistema...')
             Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
             real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],1)
-            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],2)
-            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],3)
-            cnf_matrix = confusion_matrix(real,pred)
             f=Etiquetas(real)
-
+            cnf_matrix = confusion_matrix(real,pred)
             plt.figure()
             Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
-                                  title='Confusion matrix, without normalization')
+                                  title='EigenFace')
+
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],2)
+            f=Etiquetas(real)
+            cnf_matrix = confusion_matrix(real,pred)
+            plt.figure()
+            Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
+                                  title='FisherFace')
+
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],3)
+            cnf_matrix = confusion_matrix(real,pred)
+            plt.figure()
+            Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
+                                  title='LBPH')
             plt.show()
 
         elif(Op == 'E'):

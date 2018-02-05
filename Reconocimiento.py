@@ -40,15 +40,17 @@ def Prediccion(face,algoritmo):
     if(algoritmo == 1):
         label1 = EigenFace.predict(face)
         Pre.append(label1)
+        #print label1
 
     elif(algoritmo == 2):
         label2 = FisherFace.predict(face)
         Pre.append(label2)
+        #print label2
 
     elif(algoritmo == 3):
         label3 = Face_LBP.predict(face)
         Pre.append(label3)
-
+        #print label3
     return Pre
 
 def Configurar_Umbrales(Umbral):

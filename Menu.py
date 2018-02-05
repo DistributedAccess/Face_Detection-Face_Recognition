@@ -2,6 +2,29 @@ from time import sleep
 import os
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+def Inicio(Opciones):
+    os.system("clear||cls")
+    print('\n\t{0}Escoja una opcion del menu:\n').format(WHITE)
+    sleep(0.2)
+    print('\t{0}[{1}1{2}]{3} Deteccion Comun....................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[0])
+    sleep(0.2)
+    print('\t{0}[{1}2{2}]{3} Deteccion Ruido.......................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[1])
+    sleep(0.2)
+    print('\t{0}[{1}3{2}]{3} Deteccion Experimental......................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[2])
+    sleep(0.2)
+    print('\t{0}[{1}4{2}]{3} Configurar Umbral........................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[3])
+    sleep(0.2)
+    print('\t{0}[{1}5{2}]{3} Configurar Componentes...................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[4])
+    sleep(0.2)
+    print("\t{0}[{1}6{2}]{3} Let's Rock (Comenzar Prediccion)").format(YELLOW, RED, YELLOW, WHITE)
+    sleep(0.2)
+    print('\n\t{0}[{1}E{2}]{3} Salir\n').format(YELLOW, RED, YELLOW, WHITE)
+
+    etiqueta = ('{0}Opcion{1}> '.format(BLUE, WHITE))
+    Op = raw_input(etiqueta)
+
+    return Op
+
 def Menu_Principal(Opciones):
     os.system("clear||cls")
     print('\n{0}Escoja una opcion del menu:\n').format(WHITE)

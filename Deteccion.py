@@ -2,6 +2,10 @@ import cv2
 
 Recorte = None
 
+#   USAR EL ESTANDAR ISO/IEC 19794-5
+#   ALINEAR Y NORMALIZAR
+#   UTULIZAR EL ALGORITMO PROPUESTO POR OPENCV EL DE ARNOLD SWATCWADSADASER JAJAJA :3
+
 def Deteccion_Haar(Imagen):
     #   Esta_Funcion detecta los rostros de la Imagen de Entrada y regresa
     #   el array del numero de rostros y la ubicacion de cada uno
