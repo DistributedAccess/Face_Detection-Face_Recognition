@@ -27,7 +27,8 @@ y_pred = classifier.fit(X_train, y_train).predict(X_test)
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
-                          cmap=plt.cm.Blues):
+                          cmap=plt.cm.Blues, save=False,
+                          path=None):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
@@ -57,6 +58,10 @@ def plot_confusion_matrix(cm, classes,
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+    save = True
+    if save:
+        path = "/home/verriva/Detection_Recognition/Pruebas"
+        plt.savefig(path)
 
 """
 # Compute confusion matrix

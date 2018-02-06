@@ -144,15 +144,22 @@ def Predecir_Imagenes(fotos, etiquetas, algoritmo):
     return etiquetas, A
 
 def Predecir_Imageness(fotos, algoritmo):
-    A = []
+    P = [0,0]
     for i in fotos:
         a = Reconocimiento.Prediccion(i,algoritmo)
-        A.append(a[0][0])
-        print("Real: %s, Distancia Euclidiana: %s, Algoritmo: %s" % (a[0][0], a[0][1], algoritmo))
-    return A
+        print("Prediccion: %s, Distancia Euclidiana: %s, Algoritmo: %s" % (a[0][0], a[0][1], algoritmo))
+
+        if(a[0][0] < 0):
+            P[0] = P[0] + 1
+        else:
+            P[1] = P[1] + 1
+
+    P[0] = (P[0] / float(len(fotos)))*100 # BIEN
+    P[1] = (P[1] / float(len(fotos)))*100 # MAL
+
+    return P
 
 def Etiquetas(etiquetas):
-
     A = []
     B = len(etiquetas)
     a = etiquetas.count(etiquetas[0])
@@ -252,15 +259,72 @@ def Ruido():
             DESCONOCIDOS = Preparar_Ruido(BDD,CL)
             print('\n\t Entrenado al Sistema...')
             Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
-            pred=Predecir_Imageness(DESCONOCIDOS,'EigenFace')
-            pred=Predecir_Imageness(DESCONOCIDOS,'FisherFace')
-            pred=Predecir_Imageness(DESCONOCIDOS,'LBPH')
+            PE=Predecir_Imageness(DESCONOCIDOS,'EigenFace')
+            PF=Predecir_Imageness(DESCONOCIDOS,'FisherFace')
+            PL=Predecir_Imageness(DESCONOCIDOS,'LBPH')
+            print ("Imagenes: %s, Desconocidos(Funciona Bien): %s %%, Equivocados: %s %%" % (len(DESCONOCIDOS),PE[0],PE[1]))
+            print ("Imagenes: %s, Desconocidos(Funciona Bien): %s %%, Equivocados: %s %%" % (len(DESCONOCIDOS),PF[0],PF[1]))
+            print ("Imagenes: %s, Desconocidos(Funciona Bien): %s %%, Equivocados: %s %%" % (len(DESCONOCIDOS),PL[0],PL[1]))
 
         elif(Op == 'E'):
             break
 
 def Experimental():
-    pass
+    Op  = None
+    BD  = None
+    CL  = None
+
+    Entrenamiento = []
+    Prediccion    = []
+    while(True):
+        Opciones = [BD,CL]
+        Op = Menu.Experimento(Opciones)
+        if(Op == '1'):
+            BD = Menu.Base_Datos()
+        elif(Op == '2'):
+            CL = Menu.Clasifcador()
+        elif(Op == '3'):
+            print ("Creando Directorios y SubDirectorios...")
+            Crear_Directorios_P()
+        elif(Op == 'E'):
+            break
+
+def La_Magia(path):
+
+    d = ["EigenFaces","FisherFaces","LBPH"]
+    c = [1,10,50,100,500,1000,5000,10000]
+
+    #for i in d:
+
+
+
+
+def Crear_Directorios_P():
+    Directorio = os.listdir("/home/verriva/Detection_Recognition/Pruebas")
+    a = "/Prueba" + str(len(Directorio) + 1)
+    path = "/home/verriva/Detection_Recognition/Pruebas"+a
+    if not os.path.exists(path):
+        os.mkdir(path)
+    else:
+        Directorio = natsorted(Directorio)           #   Ordenamos los Directorios
+        a = Directorio.pop()                         #   Ultimo directorio
+        b = "/Prueba" + str(int(a.replace("Prueba", ""))+1)      #   Se guarda el numero del dir
+        path = "/home/verriva/Detection_Recognition/Pruebas"+b
+        os.mkdir(path)
+
+    d = ["EigenFaces","FisherFaces","LBPH"]
+    c = [1,10,50,100,500,1000,5000,10000]
+
+    for i in d:
+        darth = path+"/"+i
+        if not os.path.exists(darth):
+            os.mkdir(darth)
+        for j in c:
+            vader = darth+"/U"+str(j)+"_C"+str(j)
+            if not os.path.exists(vader):
+                os.mkdir(vader)
+
+    return path
 
 if __name__ == "__main__":
 
