@@ -2,32 +2,39 @@ from time import sleep
 import os
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
-def Inicio(Opciones):
+def Inicio():
     os.system("clear||cls")
-    print('\n\t{0}Escoja una opcion del menu:\n').format(WHITE)
+    print('\n\t\t\t\t\t\t\t\t\t{0}MENU PRINCIPAL\n').format(GREEN)
     sleep(0.2)
-    print('\t{0}[{1}1{2}]{3} Deteccion Comun....................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[0])
+    print('\n\t\t\t\t\t{0}Escoja una opcion del Menu:\n\n').format(WHITE)
     sleep(0.2)
-    print('\t{0}[{1}2{2}]{3} Deteccion Ruido.......................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[1])
+    print('''\t\t\t\t\t{0}[{1}1{2}]{3} Deteccion Normal: {4}Realiza la deteccion de rostros con los algoritmos de: EigenFaces,
+             \t\t\t\t\t              FisherFaces y LBPH sobre una base de datos de determinada. Se modifican parametros como:
+             \t\t\t\t\t              Porcentaje de Entrenamiento, Componentes, Umbral y Detector de Rostros. Se obtienen mapas
+             \t\t\t\t\t              de confusion normalizadas por cada algoritmo de reconocimiento''').format(YELLOW, RED, YELLOW, WHITE, GREEN)
     sleep(0.2)
-    print('\t{0}[{1}3{2}]{3} Deteccion Experimental......................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[2])
+    print('''\n\t\t\t\t\t{0}[{1}2{2}]{3} Deteccion Ruido:  {4}Realiza la deteccion de rostros con los algoritmos de: EigenFaces,
+             \t\t\t\t\t              FisherFaces y LBPH sobre una base de datos totalmente desconocida a la base de datos de
+             \t\t\t\t\t              que se utilizo para el entrenamiento. Se modifican parametros como: Porcentaje de
+             \t\t\t\t\t              Entrenamiento, Componentes, Umbral y Detector de Rostros. Se obtienen mapas una lista de
+             \t\t\t\t\t              de los resultados de la Prediccion''').format(YELLOW, RED, YELLOW, WHITE, GREEN)
     sleep(0.2)
-    print('\t{0}[{1}4{2}]{3} Configurar Umbral........................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[3])
+    print('''\n\t\t\t\t\t{0}[{1}3{2}]{3} Deteccion Experimental: {4}Realiza la deteccion de rostros con los algoritmos de: EigenFaces,
+             \t\t\t\t\t\t              FisherFaces y LBPH sobre una base de datos determinada. A exepcion de las detecciones anterioes
+             \t\t\t\t\t\t              esta opcion se encarga de realizar una deteccion general del 10'%'-90'%' de la base de Datos
+             \t\t\t\t\t\t              escogida almacenando los mapas de confusion por cada algoritmo y porcentaje, ademas de una
+             \t\t\t\t\t\t              grafica del rendimiento por algoritmo en la deteccion.''').format(YELLOW, RED, YELLOW, WHITE, GREEN)
     sleep(0.2)
-    print('\t{0}[{1}5{2}]{3} Configurar Componentes...................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[4])
+    print('\n\t\t\t\t\t{0}[{1}E{2}]{3} Salir\n\n\n').format(YELLOW, RED, YELLOW, WHITE)
     sleep(0.2)
-    print("\t{0}[{1}6{2}]{3} Let's Rock (Comenzar Prediccion)").format(YELLOW, RED, YELLOW, WHITE)
-    sleep(0.2)
-    print('\n\t{0}[{1}E{2}]{3} Salir\n').format(YELLOW, RED, YELLOW, WHITE)
-
-    etiqueta = ('{0}Opcion{1}> '.format(BLUE, WHITE))
+    etiqueta = ('\t\t\t\t\t{0}Opcion{1}> '.format(BLUE, WHITE))
     Op = raw_input(etiqueta)
 
     return Op
 
-def Menu_Principal(Opciones):
+def Normal(Opciones):
     os.system("clear||cls")
-    print('\n{0}Escoja una opcion del menu:\n').format(WHITE)
+    print('\n\t{0}Escoja una opcion del menu:\n').format(WHITE)
     sleep(0.2)
     print('\t{0}[{1}1{2}]{3} Escojer Base de Datos....................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[0])
     sleep(0.2)
@@ -41,7 +48,32 @@ def Menu_Principal(Opciones):
     sleep(0.2)
     print("\t{0}[{1}6{2}]{3} Let's Rock (Comenzar Prediccion)").format(YELLOW, RED, YELLOW, WHITE)
     sleep(0.2)
-    print('\n\t{0}[{1}E{2}]{3} Salir\n').format(YELLOW, RED, YELLOW, WHITE)
+    print('\n\t{0}[{1}E{2}]{3} Regresar al Menu Principal\n').format(YELLOW, RED, YELLOW, WHITE)
+
+    etiqueta = ('{0}Opcion{1}> '.format(BLUE, WHITE))
+    Op = raw_input(etiqueta)
+
+    return Op
+
+def Ruido(Opciones):
+    os.system("clear||cls")
+    print('\n\t{0}Escoja una opcion del menu:\n').format(WHITE)
+    sleep(0.2)
+    print('\t{0}[{1}1{2}]{3} Escojer Base de Datos....................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[0])
+    sleep(0.2)
+    print('\t{0}[{1}2{2}]{3} Escojer Base de Datos Desconocida........{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[1])
+    sleep(0.2)
+    print('\t{0}[{1}3{2}]{3} Escojer Porcentaje.......................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[2])
+    sleep(0.2)
+    print('\t{0}[{1}4{2}]{3} Escojer Clasifcador......................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[3])
+    sleep(0.2)
+    print('\t{0}[{1}5{2}]{3} Configurar Umbral........................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[4])
+    sleep(0.2)
+    print('\t{0}[{1}6{2}]{3} Configurar Componentes...................{4}').format(YELLOW, RED, YELLOW, WHITE, Opciones[5])
+    sleep(0.2)
+    print("\t{0}[{1}7{2}]{3} Let's Rock (Comenzar Prediccion)").format(YELLOW, RED, YELLOW, WHITE)
+    sleep(0.2)
+    print('\n\t{0}[{1}E{2}]{3} Regresar al Menu Principal\n').format(YELLOW, RED, YELLOW, WHITE)
 
     etiqueta = ('{0}Opcion{1}> '.format(BLUE, WHITE))
     Op = raw_input(etiqueta)

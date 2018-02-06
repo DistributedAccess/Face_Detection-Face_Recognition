@@ -37,20 +37,18 @@ def Prediccion(face,algoritmo):
 
     Pre = []    #   Lista a retornar
 
-    if(algoritmo == 1):
+    if(algoritmo == 'EigenFace'):
         label1 = EigenFace.predict(face)
         Pre.append(label1)
-        #print label1
 
-    elif(algoritmo == 2):
+    elif(algoritmo == 'FisherFace'):
         label2 = FisherFace.predict(face)
         Pre.append(label2)
-        #print label2
 
-    elif(algoritmo == 3):
+    elif(algoritmo == 'LBPH'):
         label3 = Face_LBP.predict(face)
         Pre.append(label3)
-        #print label3
+
     return Pre
 
 def Configurar_Umbrales(Umbral):

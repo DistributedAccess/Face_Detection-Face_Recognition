@@ -91,16 +91,65 @@ def Preparar_Directorios(Directorios, Porcentaje, Detect_Op):
 
     return Entrenamiento, Prediccion
 
-def Predecir_Imagenes(fotos, etiquetas, algoritmo):
+def Preparar_Ruido(Directorios, Detect_Op):
 
+    Directorio = os.listdir(Directorios)    #   Lista de los Directorios dentro de Directorios
+
+    Directorio = natsorted(Directorio)      #   Ordenamos los Directorios
+
+    Entrenamiento = []  #   Este array se retornara para el Entrenamiento
+
+    Face = []  #   En este array se guardaran los rostros de cada usuario para el entrenamiento
+
+    #   Se leera cada directorio y las imagenes en cada uno
+    for Nombre_Directorio in Directorio:
+
+        #   Si no hay ningun directorio que comienze con U
+        #   el programa se cerrara
+        if not Nombre_Directorio.startswith("U"):
+            continue;
+
+        etiqueta = int(Nombre_Directorio.replace("U", ""))      #   Se guardara el numero de U, eg U2 -->2
+        SubDirectorio = Directorios + "/" + Nombre_Directorio   #   Directorios/U1, Directorios/U2...
+
+        Imagenes = os.listdir(SubDirectorio)    #   Lista de las imagenes dentro del Subdirectorio U'n'...
+
+        for Nombre_Imagen in Imagenes:
+
+            SubImagen = SubDirectorio + "/" + Nombre_Imagen     #   Directorios/U1/1.jpg, Directorios/U1/2.jpg...
+            #print Nombre_Imagen
+            Image = SubImagen
+
+            #   Detectamos el Rostro segun Detect_Op, puede ser: Haar cascades o LBP.
+            if(Detect_Op == 1):
+                rostro = Deteccion.Deteccion_Haar(Image)    #   Detector Haar Cascade
+            else:
+                rostro = Deteccion.Deteccion_LBP(Image)     #   Detector LBP
+
+            #   Si se detecto un rostro este se concatenara al array
+            #   faces y se le asigna al array labels correspondiente
+            if rostro is not None:
+                Face.append(np.asarray(rostro, dtype=np.uint8))
+
+    return Face
+
+def Predecir_Imagenes(fotos, etiquetas, algoritmo):
     A = []
     c = 0
     for i in fotos:
         a = Reconocimiento.Prediccion(i,algoritmo)
         A.append(a[0][0])
+        print("Real: %s, Prediccion: %s, Distancia Euclidiana: %s, Algoritmo: %s" % (etiquetas[c], a[0][0], a[0][1], algoritmo))
         c = c+1
-        print a
     return etiquetas, A
+
+def Predecir_Imageness(fotos, algoritmo):
+    A = []
+    for i in fotos:
+        a = Reconocimiento.Prediccion(i,algoritmo)
+        A.append(a[0][0])
+        print("Real: %s, Distancia Euclidiana: %s, Algoritmo: %s" % (a[0][0], a[0][1], algoritmo))
+    return A
 
 def Etiquetas(etiquetas):
 
@@ -114,10 +163,7 @@ def Etiquetas(etiquetas):
         c = c + a
     return A
 
-if __name__ == "__main__":
-
-    E   = True
-
+def Normal():
     Op  = None
     BD  = None
     PO  = None
@@ -127,11 +173,9 @@ if __name__ == "__main__":
 
     Entrenamiento = []
     Prediccion    = []
-
     while(True):
-
         Opciones = [BD,PO,CL,UM,CO]
-        Op = Menu.Menu_Principal(Opciones)
+        Op = Menu.Normal(Opciones)
         if(Op == '1'):
             BD = Menu.Base_Datos()
         elif(Op == '2'):
@@ -149,27 +193,85 @@ if __name__ == "__main__":
             Entrenamiento, Prediccion = Preparar_Directorios(BD,PO,CL)
             print('\n\t Entrenado al Sistema...')
             Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
-            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],1)
+
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],'EigenFace')
             f=Etiquetas(real)
             cnf_matrix = confusion_matrix(real,pred)
             plt.figure()
             Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
                                   title='EigenFace')
 
-            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],2)
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],'FisherFace')
             f=Etiquetas(real)
             cnf_matrix = confusion_matrix(real,pred)
             plt.figure()
             Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
                                   title='FisherFace')
 
-            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],3)
+            real,pred=Predecir_Imagenes(Prediccion[0],Prediccion[1],'LBPH')
             cnf_matrix = confusion_matrix(real,pred)
             plt.figure()
             Matrix.plot_confusion_matrix(cnf_matrix, classes=f,
                                   title='LBPH')
             plt.show()
 
+        elif(Op == 'E'):
+            break
+
+def Ruido():
+    Op  = None
+    BD  = None
+    BDD = None
+    PO  = None
+    CL  = None
+    UM  = None
+    CO  = None
+
+    Entrenamiento = []
+    Prediccion    = []
+    while(True):
+        Opciones = [BD,BDD,PO,CL,UM,CO]
+        Op = Menu.Ruido(Opciones)
+        if(Op == '1'):
+            BD = Menu.Base_Datos()
+        elif(Op == '2'):
+            BDD = Menu.Base_Datos()
+        elif(Op == '3'):
+            PO = Menu.Porcentaje()
+        elif(Op == '4'):
+            CL = Menu.Clasifcador()
+        elif(Op == '5'):
+            UM = Menu.Umbral()
+            Reconocimiento.Configurar_Umbrales(UM)
+        elif(Op == '6'):
+            CO = Menu.Componentes()
+            Reconocimiento.Configurar_Componentes(CO)
+        elif(Op == '7'):
+            print('\n\t Preparando Directorios...')
+            Entrenamiento, Prediccion = Preparar_Directorios(BD,PO,CL)
+            DESCONOCIDOS = Preparar_Ruido(BDD,CL)
+            print('\n\t Entrenado al Sistema...')
+            Reconocimiento.Entrenamiento(Entrenamiento[0],Entrenamiento[1])
+            pred=Predecir_Imageness(DESCONOCIDOS,'EigenFace')
+            pred=Predecir_Imageness(DESCONOCIDOS,'FisherFace')
+            pred=Predecir_Imageness(DESCONOCIDOS,'LBPH')
+
+        elif(Op == 'E'):
+            break
+
+def Experimental():
+    pass
+
+if __name__ == "__main__":
+
+    while(True):
+        Op = Menu.Inicio()
+        if(Op == '1'):
+            Normal()
+        elif(Op == '2'):
+            Ruido()
+        elif(Op == '3'):
+            Experimental()
         elif(Op == 'E'):
             print("\n\t BYE!")
             break
